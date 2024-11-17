@@ -1,31 +1,31 @@
 import pygame
 from source import setup, tools
+from . import Spirte
 
 
-class Door(pygame.sprite.Sprite):
-    def __init__(self, name):
-        pygame.sprite.Sprite.__init__(self)
-        self.name = name
-        self.frames = []
-        self.frame_index = 0
-        self.frame_rects = [(11, 12, 51, 79)]
-
-        self.load_frames()
-
-        # 创建精灵类
-        self.image = self.frames[self.frame_index]
-        self.rect = self.image.get_rect()
+class Door(Spirte.MySprite):
+    def __init__(self, x, y, name, resize):
+        frame_rects = [(11, 12, 51, 79)]
+        super().__init__(x, y, name, resize, frame_rects)
 
         # 计时器
-        self.timer = 0
+        # self.timer = 0
         # 是否通过
-        self.finish = False
+        self.door_finish = False
+
+    # 判断玩家是否到达了门前 是否可以进入下一关
+    def player_check_door(self, player):
+        if (player.rect.left >= self.rect.left and
+                player.rect.right <= self.rect.right and
+                player.rect.top >= self.rect.top and
+                player.rect.bottom <= self.rect.bottom):
+            self.door_finish = True
 
     # 加载门的图片
     def load_frames(self):
-        self.sheet = setup.GRAPHIC['main']
+        sheet = setup.GRAPHIC['main']
         for frame_rect in self.frame_rects:
-            self.frames.append(tools.get_image(self.sheet, *frame_rect, (255, 255, 255), 1))
+            self.frames.append(tools.get_image(sheet, *frame_rect, (255, 255, 255), self.resize))
 
     def update(self):
         #  动态效果

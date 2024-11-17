@@ -25,8 +25,14 @@ LEVEL_NUMBER = 1
 # 是否结束程序
 QUIT_GAME = False
 
-#
-# MAP_DATA = tools.load_map_data('map.json')
+# 地图
+MAP = None
+
+# 玩家状态
+PLAYER_BUFF = None
+
+PLAYER = None
+
 # TRAP_DATA = tools.load_map_data('trap.json')
 #
 

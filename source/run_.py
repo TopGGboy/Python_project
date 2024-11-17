@@ -37,6 +37,7 @@ class Game:
                         self.page.update_cursor(event.key)
 
                     self.keys = pygame.key.get_pressed()
+
                     # 暂停
                     if event.key == pygame.K_ESCAPE and not in_main_Menu:
                         self.pause_screen.pause = not self.pause_screen.pause

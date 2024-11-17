@@ -1,5 +1,6 @@
 import os
 import pygame
+import json
 
 
 def load_graphics(path, accept=('.png', '.jpg', '.bmp', '.gif')):
@@ -62,3 +63,20 @@ def get_image(sheet, x, y, width, height, colorkey, scale):
     image = pygame.transform.scale(image, (int(width * scale), int(height * scale)))
     # 返回处理后的图像
     return image
+
+
+# 处理地图json文件
+def read_map(file_name, LEVEL_NUMBER):
+    # 将文件名与地图数据文件夹路径拼接
+    file_path = os.path.join('source/data/maps', file_name)
+    # 打开文件并读取数据
+    with open(file_path) as f:
+        data = json.load(f)
+
+    for level_ in data:
+        if data[level_]['number'] == LEVEL_NUMBER:
+            MAP = data[level_]['map']
+            PLAYER_BUFF = data[level_]['buff']
+            # tools.modify_json('source/data/maps/memory.json', "level_number", constans.LEVEL_NUMBER)
+
+    return MAP, PLAYER_BUFF

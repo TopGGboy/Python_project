@@ -1,12 +1,14 @@
 import pygame
 
-from ..components import player
-from .. import setup
+from ..components import player, door
+from .. import setup, tools
+from . import level_map
 
 
 class Level:
     # GROUND_LIST = []
-    # GROUND_ITEMS_GROUP = pygame.sprite.Group()
+    # GROUND_ITEMS_GROUP = pygam
+    # e.sprite.Group()
     #
     # TRAP_ITEMS_GROUP = pygame.sprite.Group()
     #
@@ -23,13 +25,25 @@ class Level:
         # Level.GROUND_ITEMS_GROUP.empty()
         # Level.TRAP_ITEMS_GROUP.empty()
 
+        # 初始化地图json数据
+        MAP, PLAYER_BUFF = tools.read_map('map.json', setup.LEVEL_NUMBER)
+        setup.MAP = MAP
+        setup.PLAYER_BUFF = PLAYER_BUFF
+
         self.finished = False
         self.next = 'load_screen'
         # self.ground_number = 0
         # self.trap_number = 0
-        # self.map = constans.MAP  # 地图
 
-        # self.setup_player_door()
+        # 初始化玩家和门
+        self.player_ = None
+        self.door = None
+        self.setup_player_door()
+
+        # 将地图实例化
+        self.MAP = level_map.MAP(self.player_, self.door)
+
+        # self.map = constans.MAP  # 地图
         # self.load_map()
 
         # # 复活计时器
@@ -37,14 +51,18 @@ class Level:
 
     # 初始化玩家 和 门 和 碰撞检测
     def setup_player_door(self):
-        self.player = player.Player("GZJ")
-        self.door = door.Door("door")
+        # 实例化玩家
+        self.player_ = player.Player(x=1000, y=1000, name='GZJ', resize=1)
+        self.door = door.Door(x=1000, y=1000, name='door', resize=1)
 
         # self.track_check = track.Track()
 
     def update(self, surface, keys):
+
+        self.door.player_check_door(self.player_)
+
         # 游戏成功， 进入下一关
-        if keys[pygame.K_DOWN]:
+        if keys[pygame.K_DOWN] or self.door.door_finish:
             self.finished = True
             # 进入下一关 关卡记录数 +1
             setup.LEVEL_NUMBER += 1
@@ -57,7 +75,10 @@ class Level:
         if keys[pygame.K_LEFT]:
             self.finished = True
 
+        self.player_.update(keys)
+        self.player_.update_player_position()
         self.draw(surface)
+
         # # 游戏成功 进入下一关
         # if keys[pygame.K_DOWN] or constans.button_down == 2:
         #     self.finished = True
@@ -95,6 +116,7 @@ class Level:
     # 渲染
     def draw(self, surface):
         surface.fill((255, 255, 255))
+        self.MAP.draw(surface)
         # self.draw_map(surface)
         # surface.blit(self.door.image, self.door.rect)
         # surface.blit(self.player.image, self.player.rect)
@@ -180,24 +202,6 @@ class Level:
             self.finished = True
             # 恢复默认值
             constans.button_down = -1
-
-    # 更新玩家位置（移动）
-    def update_player_position(self):
-        # x方向移动
-        self.player.rect.x += self.player.x_vel
-        self.check_x_collision()
-
-        # y方向移动
-        self.player.rect.y += self.player.y_vel
-        self.check_y_collision()
-
-        # 陷阱启位置检测
-        self.track_check.check_trap(self.player.rect)
-
-        # 人物与陷阱的碰撞检测
-        self.check_player_trap()
-        # 检测是否掉出屏幕， 掉出屏幕死亡
-        self.check_in_screen()
 
     # 检测是否掉出屏幕， 掉出屏幕死亡
     def check_in_screen(self):
