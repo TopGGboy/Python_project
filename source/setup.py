@@ -20,7 +20,7 @@ Main_menu_font = pygame.font.Font('./resources/font/font_1.ttf', 40)
 MAIN_MENU_FLAGE = True
 
 # 关卡数字
-LEVEL_NUMBER = 1
+LEVEL_NUMBER = tools.r_w_memory("memory.json", "r")['level_number']
 
 # 是否结束程序
 QUIT_GAME = False
@@ -32,6 +32,11 @@ MAP = None
 PLAYER_BUFF = None
 
 PLAYER = None
+
+# 陷阱位置
+TRAP_XY = {'gear_trap': [], 'Ground_thorn_trap': [], 'wall_trap': [], 'janci_trap': []}
+# 陷阱触发位
+TRAP_TRACK = {'gear_trap': [], 'Ground_thorn_trap': [], 'wall_trap': [], 'janci_trap': []}
 
 # TRAP_DATA = tools.load_map_data('trap.json')
 #

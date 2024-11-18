@@ -1,8 +1,8 @@
 import pygame
 
 from ..components import player, door
-from .. import setup, tools
-from . import level_map
+from .. import setup, tools, constants as C
+from . import level_map, track
 
 
 class Level:
@@ -24,11 +24,14 @@ class Level:
         #
         # Level.GROUND_ITEMS_GROUP.empty()
         # Level.TRAP_ITEMS_GROUP.empty()
-
+        # 清空陷阱信息， 为下一关提供容奇
+        self.set_up_trap()
         # 初始化地图json数据
         MAP, PLAYER_BUFF = tools.read_map('map.json', setup.LEVEL_NUMBER)
         setup.MAP = MAP
         setup.PLAYER_BUFF = PLAYER_BUFF
+        # 初始化陷阱触发位置
+        track.setup_trap_track_xy(tools.read_map('trap.json', setup.LEVEL_NUMBER))
 
         self.finished = False
         self.next = 'load_screen'
@@ -38,6 +41,9 @@ class Level:
         # 初始化玩家和门
         self.player_ = None
         self.door = None
+        # 实例化陷阱位置检测
+        self.trap_check = track.Track()
+
         self.setup_player_door()
 
         # 将地图实例化
@@ -49,13 +55,18 @@ class Level:
         # # 复活计时器
         # self.back_life_timer = 0
 
+    # 清空陷阱信息， 为下一关提供容奇         
+    def set_up_trap(self):
+        # 陷阱位置
+        setup.TRAP_XY = {'gear_trap': [], 'Ground_thorn_trap': [], 'wall_trap': [], 'janci_trap': []}
+        # 陷阱触发位置
+        setup.TRAP_TRACK = {'gear_trap': [], 'Ground_thorn_trap': [], 'wall_trap': [], 'janci_trap': []}
+
     # 初始化玩家 和 门 和 碰撞检测
     def setup_player_door(self):
         # 实例化玩家
-        self.player_ = player.Player(x=1000, y=1000, name='GZJ', resize=1)
+        self.player_ = player.Player(x=1000, y=1000, name='GZJ', resize=1, trap_check=self.trap_check)
         self.door = door.Door(x=1000, y=1000, name='door', resize=1)
-
-        # self.track_check = track.Track()
 
     def update(self, surface, keys):
 
@@ -65,15 +76,21 @@ class Level:
         if keys[pygame.K_DOWN] or self.door.door_finish:
             self.finished = True
             # 进入下一关 关卡记录数 +1
-            setup.LEVEL_NUMBER += 1
-
+            if setup.LEVEL_NUMBER < C.MAX_LEVEL:
+                setup.LEVEL_NUMBER += 1
         if keys[pygame.K_UP]:
             self.finished = True
             # 进入上一关 关卡记录数 -1
             if setup.LEVEL_NUMBER > 1:
                 setup.LEVEL_NUMBER -= 1
-        if keys[pygame.K_LEFT]:
+        if keys[pygame.K_LEFT] or self.player_.dead_timer > 5000:
             self.finished = True
+            self.next = "level"
+            # 复活
+            self.player_.back_life_player()
+
+        # 将记录数存入json文件
+        tools.r_w_memory(file_name="memory.json", flag="w", key="level_number", new_value=setup.LEVEL_NUMBER)
 
         self.player_.update(keys)
         self.player_.update_player_position()

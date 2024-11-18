@@ -20,6 +20,8 @@ class Door(Spirte.MySprite):
                 player.rect.top >= self.rect.top and
                 player.rect.bottom <= self.rect.bottom):
             self.door_finish = True
+            # 将记录数存入json文件
+            tools.r_w_memory(file_name="memory.json", flag="w", key="level_number", new_value=setup.LEVEL_NUMBER)
 
     # 加载门的图片
     def load_frames(self):

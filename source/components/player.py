@@ -4,19 +4,21 @@ import os
 import pygame
 
 from .. import constants
-from .. import run_, setup, tools
+from .. import run_, setup, tools, constants as C
 from . import Spirte
-from ..states import level_map
+from ..states import level_map, level
 
 
 class Player(Spirte.MySprite):
-    def __init__(self, x, y, name, resize):
+    def __init__(self, x, y, name, resize, trap_check):
         frame_rects = 0
         super().__init__(x, y, name, resize, frame_rects)
 
         self.setup_states()
         self.setup_velocitis()
         self.walking_time = 0
+
+        self.trap_check = trap_check
         # self.load_images()
 
         # 设置速度
@@ -32,14 +34,33 @@ class Player(Spirte.MySprite):
         self.check_y_collision()
 
         # 陷阱启位置检测
-        # self.track_check.check_trap(self.player.rect)
+        self.trap_check.check_trap(self.rect)
 
         # 人物与陷阱的碰撞检测
         # self.check_player_trap()
         # 检测是否掉出屏幕， 掉出屏幕死亡
-        # self.check_in_screen()
+        self.check_in_screen()
 
         # 检测y方向是否碰撞
+
+        # 检测是否掉出屏幕， 掉出屏幕死亡
+
+    def check_in_screen(self):
+        if (self.rect.x < 0 or
+                self.rect.x > C.SCREEN_W or
+                self.rect.y < 0 or self.rect.y > C.SCREEN_H):
+            self.dead_player()
+
+    # 主角死亡
+    def dead_player(self):
+        print("死亡")
+        self.dead = True
+        self.rect.x = 1000
+        self.rect.y = 1000
+
+    # 主角复活
+    def back_life_player(self):
+        print("复活啦")
 
     # 检测x方向是否碰撞
     def check_x_collision(self):
@@ -92,13 +113,13 @@ class Player(Spirte.MySprite):
     def setup_states(self):
         self.state = 'stand'
         self.face_right = True
-        # self.dead = False
+        self.dead = False
         self.can_jump = True
-        # self.dead_timer = 0
+        self.dead_timer = 0
 
     def update(self, keys):
-        # if self.dead == True:
-        #     self.dead_timer = pygame.time.get_ticks()
+        if self.dead == True:
+            self.dead_timer = pygame.time.get_ticks()
 
         self.current_time = pygame.time.get_ticks()
         self.handle_states(keys)
@@ -237,14 +258,3 @@ class Player(Spirte.MySprite):
             self.x_vel = -setup.PLAYER_BUFF['x_vel']
         elif keys[pygame.K_d]:
             self.x_vel = setup.PLAYER_BUFF['x_vel']
-
-    # 主角死亡
-    def dead_player(self):
-        print("死亡")
-        self.dead = True
-        self.rect.x = 1000
-        self.rect.y = 1000
-
-    # 主角复活
-    def back_life_player(self):
-        print("复活啦")

@@ -8,6 +8,9 @@ SCREEN_SIZE = (SCREEN_W, SCREEN_H)
 # 暂停界面控件位置
 LOAD_SCREEN_RECT = {"return_home": None, "up_level": None, "down_level": None}
 
+# 最大关卡数字
+MAX_LEVEL = tools.r_w_memory("memory.json", "r")['big_level_number']
+
 # MAIN_MENU_FLAGE = True
 #
 # LEVEL_NUMBER = tools.load_map_data("memory.json")['level_number']

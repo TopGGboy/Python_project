@@ -72,11 +72,33 @@ def read_map(file_name, LEVEL_NUMBER):
     # 打开文件并读取数据
     with open(file_path) as f:
         data = json.load(f)
+    if file_name == "map.json":
+        for level_ in data:
+            if data[level_]['number'] == LEVEL_NUMBER:
+                MAP = data[level_]['map']
+                PLAYER_BUFF = data[level_]['buff']
+        return MAP, PLAYER_BUFF
 
-    for level_ in data:
-        if data[level_]['number'] == LEVEL_NUMBER:
-            MAP = data[level_]['map']
-            PLAYER_BUFF = data[level_]['buff']
-            # tools.modify_json('source/data/maps/memory.json', "level_number", constans.LEVEL_NUMBER)
+    elif file_name == "trap.json":
+        for level_ in data:
+            if level_ == "level_" + str(LEVEL_NUMBER):
+                return data[level_]
 
-    return MAP, PLAYER_BUFF
+
+# 处理记忆文件
+def r_w_memory(file_name, flag, key=None, new_value=None):
+    file_path = os.path.join('source/data/maps', file_name)
+    if flag == "r":
+        # 打开文件并读取数据
+        with open(file_path) as f:
+            data = json.load(f)
+        return data
+    # 修改文件
+    elif flag == "w":
+        with open(file_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+
+        data[key] = new_value
+
+        with open(file_path, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)

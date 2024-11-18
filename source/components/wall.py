@@ -18,5 +18,16 @@ class Wall(Spirte.MySprite):
             ground_image = pygame.transform.scale(image, (50, 52))
             self.frames.append(ground_image)
 
+    def wall_change_1(self, way):
+        speed = 10
+        if way == 'up':  # 上
+            self.rect.y -= speed
+        elif way == 'down':  # 下
+            self.rect.y += speed
+        elif way == 'left':  # 左
+            self.rect.x -= speed
+        elif way == 'right':  # 右
+            self.rect.x += speed
+
     def update(self):
         self.image = self.frames[self.frame_index]
