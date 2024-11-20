@@ -26,6 +26,12 @@ class Track:
         self.wall_move = False
         self.wall_move_timer = 0
 
+        self.gear_move = False
+        self.gear_move_timer = 0
+
+        self.spine_move = False
+        self.spine_move_timer = 0
+
         # self.janci_number = []
         # self.janci_move_timer = 0
         # self.janci_move_flage = False
@@ -35,17 +41,53 @@ class Track:
         self.player_bottom = player_rect.bottom
         for trap_name in setup.TRAP_TRACK:
             if trap_name == 'gear_trap':
-                # self.track_gear(trap_name)
-                pass
+                self.track_gear()
             elif trap_name == 'wall_trap':
-                self.track_wall(trap_name)
-            elif trap_name == 'janci_trap':
-                pass
-                # self.track_janci(trap_name)
+                self.track_wall()
+            elif trap_name == 'spine_trap':
+                self.track_spine()
 
-    def track_wall(self, trap_name):
-        for trap_xy in setup.TRAP_TRACK[trap_name]:
-            for wall_number in setup.TRAP_XY[trap_name]:
+    def track_spine(self):
+        trap_number = 0
+        for trap_xy in setup.TRAP_TRACK['spine_trap']:
+            resize = trap_xy[-1]
+            for spine in level_map.MAP.TRAP_S_GROUP:
+                if spine.name == "spine_" + str(trap_number):
+
+                    trap_number += 1
+                    if ((trap_xy[0] + 5 >= self.player_right >= trap_xy[0] - 5 and
+                         trap_xy[1] - 5 <= self.player_bottom <= trap_xy[1] + 5)) or self.spine_move:
+
+                        self.spine_move = True
+                        self.spine_move_timer += 1
+
+                        if self.spine_move_timer > 100:
+                            self.spine_move = False
+                        else:
+                            spine.spine_change_1()
+
+    def track_gear(self):
+        trap_number = 0
+        for trap_xy in setup.TRAP_TRACK['gear_trap']:
+            resize = trap_xy[-1]
+            for gear in level_map.MAP.TRAP_S_GROUP:
+                if gear.name == "gear_" + str(trap_number):
+
+                    trap_number += 1
+                    if (trap_xy[0] + 5 >= self.player_right >= trap_xy[0] and
+                        trap_xy[1] - 5 <= self.player_bottom <= trap_xy[1] + 5) or self.gear_move:
+
+                        self.gear_move = True
+                        self.gear_move_timer += 1
+
+                        if self.gear_move_timer > 800:
+                            self.gear_move = False
+                        else:
+                            gear.gear_change_1(resize)
+
+    def track_wall(self):
+        for trap_xy in setup.TRAP_TRACK['wall_trap']:
+            for wall_number in setup.TRAP_XY['wall_trap']:
                 way = wall_number[-1]
                 if ((trap_xy[0] + 5 >= self.player_right >= trap_xy[0] - 5 and
                      trap_xy[1] - 5 <= self.player_bottom <= trap_xy[1] + 5)) or self.wall_move:
@@ -59,36 +101,3 @@ class Track:
                         for wall in level_map.MAP.WALL_S_GROUP:
                             if wall.name == "ground_" + str(number):
                                 wall.wall_change_1(way)
-
-    # def track_gear(self, trap_name):
-    #     number = -1
-    #     for trap_xy in self.trap[trap_name]:
-    #         number += 1
-    #         gear = self.gear_trap_list[number]
-    #         if (trap_xy[0] + 5 >= self.player_right >= trap_xy[0] and
-    #                 trap_xy[1] - 5 <= self.player_bottom <= trap_xy[1] + 5):
-    #             gear.gear_1()
-
-    # def track_janci(self, trap_name):
-    #     number = -1
-    #     for trap_xy in self.trap[trap_name]:
-    #         number += 1
-    #         if not self.janci_number:
-    #             janci = self.janci_trap_lit[number]
-    #         elif number in self.janci_number:
-    #             janci = self.janci_trap_lit[number]
-    #
-    #         if ((trap_xy[0] + 5 >= self.player_right >= trap_xy[0] - 5 and
-    #              trap_xy[1] - 5 <= self.player_bottom <= trap_xy[1] + 5)) or self.janci_move_flage:
-    #
-    #             self.janci_number.append(number)
-    #             self.janci_move_timer += 1
-    #             self.janci_move_flage = True
-    #
-    #             if (self.janci_move_timer > 100):
-    #                 self.janci_move_flage = False
-    #                 self.janci_number = []
-    #                 if self.janci_number:
-    #                     self.janci_number.remove(number)
-    #
-    #             janci.janci_1()

@@ -58,9 +58,9 @@ class Level:
     # 清空陷阱信息， 为下一关提供容奇         
     def set_up_trap(self):
         # 陷阱位置
-        setup.TRAP_XY = {'gear_trap': [], 'Ground_thorn_trap': [], 'wall_trap': [], 'janci_trap': []}
+        setup.TRAP_XY = {'gear_trap': [], 'Ground_thorn_trap': [], 'wall_trap': [], 'spine_trap': []}
         # 陷阱触发位置
-        setup.TRAP_TRACK = {'gear_trap': [], 'Ground_thorn_trap': [], 'wall_trap': [], 'janci_trap': []}
+        setup.TRAP_TRACK = {'gear_trap': [], 'Ground_thorn_trap': [], 'wall_trap': [], 'spine_trap': []}
 
     # 初始化玩家 和 门 和 碰撞检测
     def setup_player_door(self):
@@ -165,14 +165,21 @@ class Level:
 
     # 加载陷阱
     def load_trap(self):
-        for trap_xy in constans.TRAP_XY['gear_trap']:
+        for trap_xy in setup.TRAP_XY['gear_trap']:
             self.setup_gear_trap(x=trap_xy[0], y=trap_xy[1], resize=trap_xy[2])
-        self.trap_number = 0
-        for trap_xy in constans.TRAP_XY['Ground_thorn_trap']:
-            self.setup_dici_trap(x=trap_xy[0], y=trap_xy[1], resize=trap_xy[2], way=trap_xy[3])
-        self.trap_number = 0
-        for trap_xy in constans.TRAP_XY['janci_trap']:
-            self.setup_janci_trap(x=trap_xy[0], y=trap_xy[1], resize=trap_xy[2], way=trap_xy[3])
+        # for trap_xy in constans.TRAP_XY['Ground_thorn_trap']:
+        #     self.setup_dici_trap(x=trap_xy[0], y=trap_xy[1], resize=trap_xy[2], way=trap_xy[3])
+        # self.trap_number = 0
+        # for trap_xy in constans.TRAP_XY['janci_trap']:
+        #     self.setup_janci_trap(x=trap_xy[0], y=trap_xy[1], resize=trap_xy[2], way=trap_xy[3])
+
+    # 初始化 齿轮陷阱 并放入列表和精灵组
+    def setup_gear_trap(self, x, y, resize, trap_number):
+        gear_trap_name = "gear_trap_" + str(trap_number)
+        gear_trap = gear.trap_gear(x, y, gear_trap_name, resize)
+        Level.TRAP_GEAR_LIST.append(gear_trap)
+        Level.TRAP_ITEMS_GROUP.add(gear_trap)
+        self.trap_number += 1
 
     # ------------------------------------------------------------------------------------------
     # todo  这里待优化
@@ -191,14 +198,6 @@ class Level:
         dici_trap = trap.Ground_thorn_trap(x, y, di_trap_number, resize, way)
         Level.TRAP_DICI_LIST.append(dici_trap)
         Level.TRAP_ITEMS_GROUP.add(dici_trap)
-        self.trap_number += 1
-
-    # 初始化 齿轮陷阱 并放入列表和精灵组
-    def setup_gear_trap(self, x, y, resize):
-        gear_trap_name = "gear_trap_" + str(self.trap_number)
-        gear_trap = trap.trap_gear(x, y, gear_trap_name, resize)
-        Level.TRAP_GEAR_LIST.append(gear_trap)
-        Level.TRAP_ITEMS_GROUP.add(gear_trap)
         self.trap_number += 1
 
     # 初始化路面并放入列表和精灵组

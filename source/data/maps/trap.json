@@ -9,7 +9,7 @@
   },
 
   "level_2": {
-      "janci_trap": {
+      "spine_trap": {
             "1": {
               "trap_xy": [789, 383, 2, "right"],
               "trap_track": [535, 393]
@@ -20,7 +20,7 @@
   "level_3": {
       "gear_trap": {
         "1": {
-          "trap_xy": [650, 180, 1],
+          "trap_xy": [650, 180, 1, 3],
           "trap_track": [100, 100]
         }
       },
@@ -33,9 +33,9 @@
   },
 
   "level_4": {
-    "janci_trap": {
+    "spine_trap": {
       "1": {
-        "trap_xy": [277, 242, 2, "left"],
+        "trap_xy": [277, 242, 1, "right"],
         "trap_track": [191, 299]
       }
     }
@@ -44,8 +44,8 @@
   "level_5": {
     "gear_trap": {
       "1": {
-        "trap_xy": [340,295, 1],
-        "trap_track": [280,246]
+        "trap_xy": [340,295,1],
+        "trap_track": [280,246,3]
       }
     },
     "Ground_thorn_trap": {

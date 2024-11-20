@@ -1,0 +1,12 @@
+"wall_trap":
+    {
+        "trap_xy": [第几个, 第几个, "方向"]
+        "trap_track": [x, y]
+    }
+
+
+"gear_trap":
+    {
+        "trap_xy": [x,y,"原始大小"],
+        "trap_track": [280,246,"变化后的大小"]
+    }

@@ -40,16 +40,26 @@ class Player(Spirte.MySprite):
         # self.check_player_trap()
         # 检测是否掉出屏幕， 掉出屏幕死亡
         self.check_in_screen()
+        self.check_player_trap()
 
         # 检测y方向是否碰撞
 
         # 检测是否掉出屏幕， 掉出屏幕死亡
 
+    # 检测是否调出屏幕
     def check_in_screen(self):
         if (self.rect.x < 0 or
                 self.rect.x > C.SCREEN_W or
                 self.rect.y < 0 or self.rect.y > C.SCREEN_H):
             self.dead_player()
+
+    # 检测是否碰到陷阱
+    def check_player_trap(self):
+        for trap in level_map.MAP.TRAP_S_GROUP:
+            trap_item = pygame.sprite.collide_mask(self, trap)
+            if trap_item:
+                self.dead_player()
+                break
 
     # 主角死亡
     def dead_player(self):

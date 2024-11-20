@@ -34,9 +34,9 @@ PLAYER_BUFF = None
 PLAYER = None
 
 # 陷阱位置
-TRAP_XY = {'gear_trap': [], 'Ground_thorn_trap': [], 'wall_trap': [], 'janci_trap': []}
+TRAP_XY = {'gear_trap': [], 'Ground_thorn_trap': [], 'wall_trap': [], 'spine_trap': []}
 # 陷阱触发位
-TRAP_TRACK = {'gear_trap': [], 'Ground_thorn_trap': [], 'wall_trap': [], 'janci_trap': []}
+TRAP_TRACK = {'gear_trap': [], 'Ground_thorn_trap': [], 'wall_trap': [], 'spine_trap': []}
 
 # TRAP_DATA = tools.load_map_data('trap.json')
 #
